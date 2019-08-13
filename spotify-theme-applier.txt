@@ -1,0 +1,81 @@
+// ==UserScript==
+// @name         Spotify Theme Applier
+// @namespace    http://tampermonkey.net/
+// @version      1.0
+// @description  https://github.com/omerfarukerkul/spotify-theme-applier
+// @author       Ömer Faruk ERKUL
+// @match        https://open.spotify.com/*
+// @require http://code.jquery.com/jquery-3.3.1.min.js
+// @require https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js
+// @resource customCSS https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css
+// @grant GM_addStyle
+// @grant GM_getResourceText
+// @run-at   document-start
+// ==/UserScript==
+
+(function() {
+
+    $(function(){
+        var newCSS = GM_getResourceText ("customCSS");
+        GM_addStyle (newCSS);
+        var mainColor = "#022840"; //lighter better
+        var leftBar = "#022840";  //darker better
+        var secondaryColor = "#4a0000"; // searchbar
+        var white = "white";
+
+        var mainBackground = $("#main > div > div:nth-child(2)");
+        var parentBackground = $("#main > div > div:nth-child(3)");
+        var existPageLoad = $("#main");
+
+        var checkParentExist = setInterval(function() {
+            if($("#main > div > div:nth-child(3)").length){
+                $("#main > div > div:nth-child(3)").remove();
+                var newStyle = $('<div class="_0efd6b9f9de35e4d1fe896fe2ce5c17c.scss" style="background-image: linear-gradient(to right bottom, rgb(18, 18, 18), rgb(0, 0, 0)), linear-gradient(transparent, rgb(0, 0, 0) 70%);"><div class="_0efd6b9f9de35e4d1fe896fe2ce5c17c.scss" style="background-image: linear-gradient(to right bottom, '+mainColor+', rgb(0, 0, 0)), linear-gradient(transparent, rgb(0, 0, 0) 70%);"></div></div>').appendTo($("#main > div > div:nth-child(2)"));
+                var addColorPicker = $('<li class="_70aef60cb99a7cbe780a28b62977a811.scss"><div><a id="colorPicker" class="_137ec408b14ac4ea5aec6ded3d95f328.scss" href="#">THEME</a></div></li>').appendTo($('#main > div > div.Root__top-container > div.Root__main-view > div.main-view-container > div > div > section > nav > ul'))
+                clearInterval(checkParentExist);
+            }
+        }, 100);
+
+        var checkExist = setInterval(function() {
+            if (existPageLoad.length) {
+                $(".now-playing-bar").css("background",mainColor);
+                $(".navBar").css("background",leftBar);
+                $(".SearchInputBox").css("background",secondaryColor);
+                $(".Rootlist").remove();
+                $(".NavBarFooter").remove();
+
+                $(".control-button").css("color",white);
+                $("body button input").css("color",white);
+                $(".playback-bar__progress-time").css("color",white);
+                $(".progress-bar__fg").css("background-color",white);
+                clearInterval(checkExist);
+            }
+        }, 100);
+
+        function updateColor(element, color) {
+            $(element[0]).attr("style",'background-image: linear-gradient(to right bottom, '+color+', rgb(0, 0, 0)), linear-gradient(transparent, rgb(0, 0, 0) 70%);' );
+            $(element[1]).css("background",color);
+            $(element[2]).css("background",color);
+        }
+
+        var checkColorPalette = setInterval(function(){
+            if($('#colorPicker').length){
+                $("#colorPicker").spectrum({
+                    showPaletteOnly: true,
+                    showPalette:true,
+                    hideAfterPaletteSelect:true,
+                    clickoutFiresChange: true,
+                    color: '#022840',
+                    hide: function (color) { updateColor([$("#main > div > div:nth-child(3)"),$(".now-playing-bar"),$(".navBar")], color) },
+                    move: function (color) { updateColor([$("#main > div > div:nth-child(3)"),$(".now-playing-bar"),$(".navBar")], color); },
+                    palette: [
+                        ['#A3A647', '#E9BA5F','#E2783C'],
+                        ['#993325', '#3A0C0A', '#022840']
+                    ]
+                });
+                clearInterval(checkColorPalette);
+            }
+        },1000)
+
+        });
+})();
