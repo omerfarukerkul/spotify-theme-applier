@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Spotify Theme Applier
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  https://github.com/omerfarukerkul/spotify-theme-applier
 // @author       Ömer Faruk ERKUL
 // @match        https://open.spotify.com/*
@@ -31,7 +31,10 @@
             if($("#main > div > div:nth-child(3)").length){
                 $("#main > div > div:nth-child(3)").remove();
                 var newStyle = $('<div class="_0efd6b9f9de35e4d1fe896fe2ce5c17c.scss" style="background-image: linear-gradient(to right bottom, rgb(18, 18, 18), rgb(0, 0, 0)), linear-gradient(transparent, rgb(0, 0, 0) 70%);"><div class="_0efd6b9f9de35e4d1fe896fe2ce5c17c.scss" style="background-image: linear-gradient(to right bottom, '+mainColor+', rgb(0, 0, 0)), linear-gradient(transparent, rgb(0, 0, 0) 70%);"></div></div>').appendTo($("#main > div > div:nth-child(2)"));
-                var addColorPicker = $('<li class="_70aef60cb99a7cbe780a28b62977a811.scss"><div><a id="colorPicker" class="_137ec408b14ac4ea5aec6ded3d95f328.scss" href="#">THEME</a></div></li>').appendTo($('#main > div > div.Root__top-container > div.Root__main-view > div.main-view-container > div > div > section > nav > ul'))
+                var liClass = $("#main > div > div.Root__top-container > div.Root__main-view > div.main-view-container > div > div > section > nav > ul > li:nth-child(1)").attr("class");
+                var liChildClass = $("#main > div > div.Root__top-container > div.Root__main-view > div.main-view-container > div > div > section > nav > ul > li:nth-child(2) > div > a").attr("class");
+
+                var addColorPicker = $('<li class="'+liClass+'"><div><a id="colorPicker" class="'+liChildClass+'" href="#">THEME</a></div></li>').appendTo($('#main > div > div.Root__top-container > div.Root__main-view > div.main-view-container > div > div > section > nav > ul'))
                 clearInterval(checkParentExist);
             }
         }, 100);
